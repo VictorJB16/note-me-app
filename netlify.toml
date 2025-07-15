@@ -1,0 +1,28 @@
+[build]
+  publish = "dist"
+  command = "bun install --frozen-lockfile && bun run build"
+
+[build.environment]
+  NODE_VERSION = "18"
+  BUN_VERSION = "1.0.0"
+  # Optimizaciones para la build
+  NODE_OPTIONS = "--max_old_space_size=4096"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers para optimizar el cache y seguridad
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
