@@ -10,7 +10,8 @@ const testTasks: Task[] = [
     description: 'Esta es una tarea de prueba',
     status: 'nueva',
     createdAt: new Date(),
-    timeSpent: 0
+    timeSpent: 0,
+    pomodoroSessions: 0
   },
   {
     id: '2',
@@ -19,7 +20,8 @@ const testTasks: Task[] = [
     status: 'en-proceso',
     createdAt: new Date(Date.now() - 60000), // 1 minute ago
     startedAt: new Date(Date.now() - 30000), // 30 seconds ago
-    timeSpent: 0
+    timeSpent: 0,
+    pomodoroSessions: 0
   }
 ]
 

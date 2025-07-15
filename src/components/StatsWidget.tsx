@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { CheckCircle, Clock, Activity, TrendingUp } from 'lucide-react'
+import { CheckCircle, Clock, Activity, TrendingUp, Timer } from 'lucide-react'
 import type { Task } from '../types/Task'
 import { formatDuration } from '../utils/taskUtils'
 
@@ -12,6 +12,7 @@ export default function StatsWidget({ tasks }: StatsWidgetProps) {
   const completedTasks = tasks.filter(task => task.status === 'completada').length
   const inProgressTasks = tasks.filter(task => task.status === 'en-proceso').length
   const totalTimeSpent = tasks.reduce((acc, task) => acc + task.timeSpent, 0)
+  const totalPomodoros = tasks.reduce((acc, task) => acc + (task.pomodoroSessions || 0), 0)
   const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0
 
   const stats = [
@@ -34,7 +35,13 @@ export default function StatsWidget({ tasks }: StatsWidgetProps) {
       label: 'En Progreso',
       value: inProgressTasks,
       color: 'text-yellow-400',
-      bg: 'bg-yellow-500/20'
+      bg: 'bg-yellow-500/20'    },
+    {
+      icon: Timer,
+      label: 'Pomodoros',
+      value: `🍅 ${totalPomodoros}`,
+      color: 'text-red-400',
+      bg: 'bg-red-500/20'
     },
     {
       icon: TrendingUp,
@@ -44,9 +51,10 @@ export default function StatsWidget({ tasks }: StatsWidgetProps) {
       bg: 'bg-purple-500/20'
     }
   ]
+
   return (
     <motion.div
-      className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6"
+      className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mb-4 sm:mb-6"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
@@ -70,11 +78,9 @@ export default function StatsWidget({ tasks }: StatsWidgetProps) {
             </div>
           </div>
         </motion.div>
-      ))}
-
-      {totalTimeSpent > 0 && (
+      ))}      {totalTimeSpent > 0 && (
         <motion.div
-          className="col-span-2 lg:col-span-4 bg-gradient-to-r from-gray-800 via-gray-800 to-gray-700 rounded-xl p-3 sm:p-4 border border-gray-600/50 backdrop-blur-sm"
+          className="col-span-2 lg:col-span-5 bg-gradient-to-r from-gray-800 via-gray-800 to-gray-700 rounded-xl p-3 sm:p-4 border border-gray-600/50 backdrop-blur-sm"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}

@@ -6,6 +6,7 @@ interface StorageInfo {
   historyCount: number
   lastSave: Date | null
   expiryDate: Date | null
+  isOnline?: boolean
 }
 
 interface SettingsProps {
@@ -55,9 +56,7 @@ export default function Settings({ onClearData, getStorageInfo }: SettingsProps)
             <Database className="w-5 h-5 text-blue-400" />
           </div>
           <h2 className="text-xl font-semibold text-white">Información de Almacenamiento</h2>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        </div>        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
           <div className="bg-gray-700/30 rounded-xl p-4">
             <div className="flex items-center space-x-2 mb-2">
               <Info className="w-4 h-4 text-blue-400" />
@@ -77,18 +76,23 @@ export default function Settings({ onClearData, getStorageInfo }: SettingsProps)
           <div className="bg-gray-700/30 rounded-xl p-4">
             <div className="flex items-center space-x-2 mb-2">
               <Calendar className="w-4 h-4 text-green-400" />
-              <span className="text-sm font-medium text-gray-300">Último Guardado</span>
+              <span className="text-sm font-medium text-gray-300">Estado de Conexión</span>
             </div>
-            <p className="text-sm text-white">{formatDate(storageInfo.lastSave)}</p>
+            <div className="flex items-center space-x-2">
+              <div className={`w-2 h-2 rounded-full ${storageInfo.isOnline ? 'bg-green-400' : 'bg-red-400'}`}></div>
+              <p className="text-sm text-white">
+                {storageInfo.isOnline ? '🌐 En línea (Firestore)' : '📱 Sin conexión'}
+              </p>
+            </div>
           </div>
 
           <div className="bg-gray-700/30 rounded-xl p-4">
             <div className="flex items-center space-x-2 mb-2">
               <Calendar className="w-4 h-4 text-orange-400" />
-              <span className="text-sm font-medium text-gray-300">Expira en</span>
+              <span className="text-sm font-medium text-gray-300">Almacenamiento</span>
             </div>
             <p className="text-sm text-white">
-              {daysUntilExpiry !== null ? `${daysUntilExpiry} días` : 'N/A'}
+              {storageInfo.isOnline ? 'Firestore (Permanente)' : 'Cache Local'}
             </p>
           </div>
         </div>

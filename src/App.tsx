@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Toaster } from 'react-hot-toast'
-import { Navigation, TaskForm, TaskList, TaskHistory, StatsWidget, Settings } from './components'
+import { Navigation, TaskForm, TaskList, TaskHistory, StatsWidget, Settings, Pomodoro } from './components'
 import { useTasks } from './hooks/useTasks'
 import type { ViewType } from './types'
 
@@ -11,9 +11,11 @@ function App() {
     tasks, 
     timeHistory, 
     isLoaded,
+    isOnline,
     addTask, 
     updateTaskStatus, 
     deleteTask,
+    updateTaskPomodoroCount,
     clearAllData,
     getStorageInfo
   } = useTasks()
@@ -83,14 +85,30 @@ function App() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <motion.h1 
-            className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent text-center sm:text-left"
-            initial={{ scale: 0.9 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            📝 Note Me App
-          </motion.h1>
+          <div className="flex items-center justify-between mb-4 sm:mb-6">
+            <motion.h1 
+              className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent"
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              📝 Note Me App
+            </motion.h1>
+            
+            {/* Indicador de estado de conexión */}
+            <motion.div 
+              className="flex items-center space-x-2 px-3 py-2 bg-gray-800/50 rounded-lg border border-gray-700/50"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-400' : 'bg-red-400'}`}></div>
+              <span className="text-sm text-gray-300">
+                {isOnline ? 'En línea' : 'Sin conexión'}
+              </span>
+            </motion.div>
+          </div>
+          
           <Navigation 
             activeView={activeView} 
             onViewChange={setActiveView}
@@ -121,6 +139,13 @@ function App() {
             <TaskHistory 
               timeHistory={timeHistory}
               tasks={tasks}
+            />
+          )}
+
+          {activeView === 'pomodoro' && (
+            <Pomodoro 
+              tasks={tasks}
+              updateTaskPomodoroCount={updateTaskPomodoroCount}
             />
           )}
 
