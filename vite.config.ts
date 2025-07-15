@@ -9,15 +9,16 @@ export default defineConfig({
     tailwindcss(),
   ],
   build: {
+    outDir: 'dist',
+    sourcemap: false,
+    minify: 'esbuild',
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          firebase: ['firebase/app', 'firebase/firestore'],
-          motion: ['framer-motion']
-        }
-      }
+        manualChunks: undefined,
+      },
     },
-    chunkSizeWarningLimit: 1000
-  }
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom'],
+  },
 })
